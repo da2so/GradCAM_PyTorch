@@ -84,8 +84,6 @@ class GradCAM(Gradient):
     def build(self):
         activationMap=self.activationMap()
         weights=self.get_gradient(None)
-        #weights=np.reshape(512,1)
-        #gradcam=F.relu(np.multiply(activationMap,weights).sum())
 
         weights=weights.reshape(weights.shape[1],1,1)
 
@@ -95,7 +93,5 @@ class GradCAM(Gradient):
 
         gradcam=cv2.resize(gradcam.data.cpu().numpy(),(224,224))
 
-
         save(gradcam,self.img,self.img_path)
-        print np.shape(gradcam)
 

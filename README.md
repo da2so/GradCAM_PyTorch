@@ -27,4 +27,4 @@ Arguments:
 ## Understanding GradCAM
 
 Check my blog!!
-[da2so](https://da2so.github.io/2020-08-10-GradCAM/)
+[GradCAM in da2so](https://da2so.github.io/2020-08-10-GradCAM/)

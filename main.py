@@ -1,4 +1,4 @@
-from GradCAM import *
+from GradCAM import GradCAM
 import argparse
 
 
@@ -6,14 +6,12 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser(description='PyTorch GradCAM')
 
     parser.add_argument('--img_path', type=str, default="examples/catdog.png", help='Image Path')
-    parser.add_argument('--model', type=str, default="vgg19", help='Chocie a Pretrained Model(vgg19,resnet)')
-    parser.add_argument('--target_layer', type=str, default="36", help='Target layer of the model')
+    #Pretrained model list:{'AlexNet', 'VGG19', 'ResNet50', 'DenseNet169', 'MobileNet' ,'WideResNet50'}
+    parser.add_argument('--model_path', type=str, default="VGG19", help='Chocie a pretrained model or saved model (.pt)')
+    #if you use gpu or cpu, set True or False, respectly.
     parser.add_argument('--cuda', action='store_true', default=True, help='Use cuda or not')
+    
     arg = parser.parse_args()
 
-    model=load_model(arg.model)
-
-
-    gradcam=GradCAM(arg.img_path,model,arg.target_layer)
-    gradcam.build()
-
+    gradcam=GradCAM(arg.img_path,arg.model_path)
+    gradcam()

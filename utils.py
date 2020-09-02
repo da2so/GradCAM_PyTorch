@@ -1,30 +1,51 @@
+import os
+import cv2
+import sys
+import numpy as np
+from matplotlib import pyplot as plt
+
 from torch.nn import functional as F
 import torch
 from torch.autograd import Variable
 from torchvision import models
 import torchvision
-import cv2
-import sys
-import numpy as np
-from matplotlib import pyplot as plt
-import os
+
 
 def load_model(model_name):
+    #for saved model (.pt)
+    if '.pt' in model_name:
+        if torch.typename(torch.load(model_name)) == 'OrderedDict':
 
-    if model_name =="vgg19":
+            model=Net()
+            model.load_state_dict(torch.load(model_name))
 
+        else:
+            model=torch.load(model_name)
+
+    #for pretrained model (ImageNet)
+    elif model_name=='AlexNet':
+        model = models.alexnet(pretrained=True)
+    elif model_name=='VGG19':
         model = models.vgg19(pretrained=True)
-        model.eval()
-        if cuda_available():
-            model.cuda()
-    elif model_name=="resnet52":
-        pass
-    #for p in model.features.parameters():
-    #    p.requires_grad = False
-    #for p in model.classifier.parameters():
-    #    p.requires_grad = False
+    elif model_name=='ResNet50':
+        model = models.resnet50(pretrained=True)
+    elif model_name=='DenseNet169':
+        model = models.densenet169(pretrained=True)
+    elif model_name=='MobileNet':
+        model  = models.mobilenet_v2(pretrained=True)
+    elif model_name=='WideResNet50':
+        model = models.wide_resnet50_2(pretrained=True)
+    
+    else:
+        print('Choose an available pre-trained model')
+        return
+
+    model.eval()
+    if cuda_available():
+        model.cuda()
 
     return model
+
 def cuda_available():
     use_cuda = torch.cuda.is_available()
     return use_cuda
@@ -55,7 +76,7 @@ def preprocess_image(img):
     preprocessed_img_tensor.unsqueeze_(0)
     return Variable(preprocessed_img_tensor, requires_grad=False)
 
-def save(mask, img, path):
+def save(mask, img, img_path, model_path):
 
     mask = (mask - np.min(mask)) / np.max(mask)
 
@@ -66,9 +87,9 @@ def save(mask, img, path):
     gradcam = gradcam / np.max(gradcam)
 
 
-    index = path.find('/')
-    index2 = path.find('.')
-    path = 'result/' + path[index + 1:index2]
+    index = img_path.find('/')
+    index2 = img_path.find('.')
+    path = 'result/' + img_path[index + 1:index2] +'/'+model_path
     if not (os.path.isdir(path)):
         os.makedirs(path)
 

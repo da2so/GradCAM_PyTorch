@@ -13,7 +13,7 @@
 ## Running the code
 
 ```shell
-python main.py --model_path=VGG19 --img_path=examples/catdog --cuda=True
+python main.py --model_path=VGG19 --img_path=examples/catdog.png --cuda=True
 ```
 
 Arguments:

@@ -7,13 +7,15 @@
 
 - Pytorch 1.14 
 - Python 3.6
+- cv2 4.4.0
+- matplotlib 3.3.1
 - CUDA 10.1 (optional)
 
 
 ## Running the code
 
 ```shell
-python main.py --model_path=VGG19 --img_path=examples/catdog.png --cuda=True
+python main.py --model_path=VGG19 --img_path=examples/catdog.png
 ```
 
 Arguments:
@@ -21,7 +23,7 @@ Arguments:
 - `model_path` - Choose a pretrained model (VGG19, ResNet50, DenseNet169, ...) or saved model (.pt) 
 - `img_path` - Image Path
 - `cuda` - Use cuda?
-
+- `cuda_device` - Select a specific GPU device
 
 
 ## Understanding GradCAM

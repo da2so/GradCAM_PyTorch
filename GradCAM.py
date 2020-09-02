@@ -4,7 +4,10 @@ import numpy as np
 
 
 class GradCAM():
-    def __init__(self,path,model_path,class_index=None):
+    def __init__(self,path,model_path,cuda_device, class_index=None):
+        if cuda_available():
+            torch.cuda.set_device(cuda_device)
+
         self.img_path=path
         self.model_path=model_path
         self.class_index=class_index

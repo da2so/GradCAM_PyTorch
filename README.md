@@ -1,12 +1,13 @@
 # GradCAM
 
-![2](./assets/fig1.png){: .mx-auto.d-block :}
+
+![2](./assets/fig1.png)
 
 ## Requirements
 
 - Pytorch 1.14 
-- Python3.6
-- CUDA10.1 (optional)
+- Python 3.6
+- CUDA 10.1 (optional)
 
 
 ## Running the code
@@ -20,3 +21,10 @@ Arguments:
 - `model_path` - Choose a pretrained model (VGG19, ResNet50, DenseNet169, ...) or saved model (.pt) 
 - `img_path` - Image Path
 - `cuda` - Use cuda?
+
+
+
+## Understanding GradCAM
+
+Check my blog!!
+[da2so](https://da2so.github.io/2020-08-10-GradCAM/, "Go")

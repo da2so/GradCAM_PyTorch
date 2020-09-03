@@ -1,6 +1,8 @@
 import os
 import cv2
 import sys
+import sys
+
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -38,7 +40,7 @@ def load_model(model_name):
     
     else:
         print('Choose an available pre-trained model')
-        return
+        sys.exit()
 
     model.eval()
     if cuda_available():

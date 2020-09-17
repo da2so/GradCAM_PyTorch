@@ -5,7 +5,7 @@
 
 ## Requirements
 
-- Pytorch 1.14 
+- Pytorch 1.4.0 
 - Python 3.6
 - cv2 4.4.0
 - matplotlib 3.3.1

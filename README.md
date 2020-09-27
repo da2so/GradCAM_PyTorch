@@ -43,7 +43,7 @@ Suppose that you select(type) the features module (number 0) like as the figure 
 
 ![2](./assets/fig2.png)
 
-Because you select the module, you should select a target layer in the module as described in below figure
+Because you select the module, you get system print one more and should select a target layer in the module as described in below figure.  
 Once typing the 'number' or 'name' of a target class, you can get GradCAM result.
 
 ![2](./assets/fig3.png)

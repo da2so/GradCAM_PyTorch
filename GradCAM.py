@@ -1,17 +1,23 @@
-from utils import *
 import numpy as np
+import sys 
+import cv2
 
+import torch 
+from torch.nn import functional as F
+from torch.autograd import Variable
+
+from utils import load_image, load_model, cuda_available, preprocess_image,save , choose_tlayer
 
 
 class GradCAM():
-    def __init__(self,path,model_path,cuda_device, class_index=None):
+    def __init__(self,path,model_path,select_t_layer,cuda_device, class_index=None):
         if cuda_available():
             torch.cuda.set_device(cuda_device)
 
         self.img_path=path
         self.model_path=model_path
         self.class_index=class_index
-        
+        self.select_t_layer=select_t_layer
         
         self.gradients=dict()
         self.activations=dict()
@@ -27,21 +33,27 @@ class GradCAM():
             return None
         
         #find finalconv layer name
-        finalconv_after=['classifier', 'avgpool', 'fc']
+        if self.select_t_layer==False:
+            finalconv_after=['classifier', 'avgpool', 'fc']
 
-        for idx, m in enumerate(self.model._modules.items()):
-            if any(x in m for x in finalconv_after): 
-                break
-            else:
-                self.finalconv_module=m[1]
+            for idx, m in enumerate(self.model._modules.items()):
+                if any(x in m for x in finalconv_after): 
+                    break
+                else:
+                    self.finalconv_module=m[1]
         
-        self.finalconv_layer=self.finalconv_module[-1]
-        
-        self.finalconv_layer.register_forward_hook(forward_hook)
-        self.finalconv_layer.register_backward_hook(backward_hook)
+            self.t_layer=self.finalconv_module[-1]
+        else:
+            model_obj=self.model
+            self.t_layer= choose_tlayer(model_obj)
+
+
+        self.t_layer.register_forward_hook(forward_hook)
+        self.t_layer.register_backward_hook(backward_hook)
         
     def __call__(self):
 
+        print('\nGradCAM start ...')
         self.img=load_image(self.img_path)
 
         #numpy to tensor
@@ -78,3 +90,5 @@ class GradCAM():
         gradcam=F.relu((weights*activationMap).sum(0))
         gradcam=cv2.resize(gradcam.data.cpu().numpy(),(224,224))
         save(gradcam,self.img,self.img_path, self.model_path)
+        
+        print('GradCAM end !!!\n')

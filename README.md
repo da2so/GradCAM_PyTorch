@@ -21,7 +21,7 @@ python main.py --model_path=VGG19 --img_path=examples/catdog.png --select_t_laye
 Arguments:
 
 - `model_path` - Choose a pretrained model (AlexNet, VGG19, ResNet50, DenseNet169, ) or saved model (.pt) 
-	-Available list: [AlexNet, VGG19, ResNet50, DenseNet169, MobileNet, WideResNet50]
+	- Available list: [AlexNet, VGG19, ResNet50, DenseNet169, MobileNet, WideResNet50]
 - `img_path` - Image Path
 - `select_t_layer` -  Choose a target layer manually?
 	- If True, you can select a layer and get GradCAM for the layer.
@@ -48,6 +48,17 @@ Once typing the 'number' or 'name' of a target class, you can get GradCAM result
 
 ![2](./assets/fig3.png)
 
+
+### How to use your customized model
+
+If you want to use customized model that has a type 'OrderedDict', you shoud type a code that loads model object.
+
+Search 'load model' function in utils.py and type a code such as:
+
+```shell
+from yourNetwork import yourNetwork())
+model=yourNetwork()
+```
 
 
 ## Understanding GradCAM

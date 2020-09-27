@@ -18,6 +18,10 @@ def load_model(model_name):
     if '.pt' in model_name:
         if torch.typename(torch.load(model_name)) == 'OrderedDict':
 
+            #if you want to use customized model that has a type 'OrderedDict',
+            #you shoud load model object as follows:
+            
+            #from Net import Net()
             #model=Net()
             model.load_state_dict(torch.load(model_name))
 

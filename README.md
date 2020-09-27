@@ -24,8 +24,8 @@ Arguments:
 	-Available list: [AlexNet, VGG19, ResNet50, DenseNet169, MobileNet, WideResNet50]
 - `img_path` - Image Path
 - `select_t_layer` -  Choose a target layer manually?
-	-If True, you can select a layer and get GradCAM for the layer.
-	-Elif False, you can get GradCAM automatically.
+	- If True, you can select a layer and get GradCAM for the layer.
+	- Elif False, you can get GradCAM automatically.
 - `cuda` - Use cuda?
 - `cuda_device` - Select a specific GPU device
 

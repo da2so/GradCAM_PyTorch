@@ -1,4 +1,4 @@
-# GradCAM
+# GradCAM PyTorch
 
 
 ![2](./assets/fig1.png)

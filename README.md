@@ -51,7 +51,7 @@ Once typing the 'number' or 'name' of a target class, you can get GradCAM result
 
 ### How to use your customized model
 
-If you want to use customized model that has a type 'OrderedDict', you shoud type a code that loads model object.
+If you want to use a customized model that has a data type 'OrderedDict', you shoud type a code that loads model object.
 
 Search 'load model' function in utils.py and type a code such as:
 

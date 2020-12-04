@@ -3,9 +3,9 @@
 ![Python version support](https://img.shields.io/badge/python-3.6-blue.svg)
 ![PyTorch version support](https://img.shields.io/badge/pytorch-1.7.0-red.svg)
 
-![2](./assets/fig1.png)
-
 :star: Star us on GitHub — it helps!!
+
+![2](./assets/fig1.png)
 
 ## Install
 

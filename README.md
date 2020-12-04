@@ -19,7 +19,7 @@ Then, you prepare runtime environment:
 ## Use
 
 ```shell
-python main.py --model_path=resnet50 --img_path=examples/catdog.png --select_t_layer=False
+CUDA_VISIBLE_DEVICES=0 python main.py --model_path=resnet50 --img_path=examples/catdog.png --select_t_layer=False
 ```
 
 Arguments:
@@ -37,7 +37,7 @@ Arguments:
 If you want to select a target layer manually, you run the following code:
 
 ```shell
-python main.py --model_path=resnet50 --img_path=examples/catdog.png --select_t_layer=True
+CUDA_VISIBLE_DEVICES=0 python main.py --model_path=resnet50 --img_path=examples/catdog.png --select_t_layer=True
 ```
 
 And then, you can get system print such as the following figure (left).  

@@ -1,33 +1,34 @@
 # GradCAM PyTorch
 
-
 ![2](./assets/fig1.png)
 
-## Requirements
+:star: Star us on GitHub — it helps!!
 
-- Pytorch 1.4.0 
+## Install
+
 - Python 3.6
-- cv2 4.4.0
-- matplotlib 3.3.1
-- CUDA 10.1 (optional)
 
+You will need a machine with a GPU and CUDA installed.  
+Then, you prepare runtime environment:
 
-## Running the code
+   ```shell
+   pip install -r requirements.txt
+   ```
+
+## Use
 
 ```shell
-python main.py --model_path=VGG19 --img_path=examples/catdog.png --select_t_layer=False
+python main.py --model_path=resnet50 --img_path=examples/catdog.png --select_t_layer=False
 ```
 
 Arguments:
 
-- `model_path` - Choose a pretrained model (AlexNet, VGG19, ResNet50, DenseNet169, ) or saved model (.pt) 
-	- Available list: [AlexNet, VGG19, ResNet50, DenseNet169, MobileNet, WideResNet50]
+- `model_path` - Choose a pretrained model in torchvision.models or saved model (.pt) 
+	- Examples of available list: ['alexnet', 'vgg19', 'resnet50', 'densenet169', 'mobilenet_v2' ,'wide_resnet50_2', ...]
 - `img_path` - Image Path
 - `select_t_layer` -  Choose a target layer manually?
 	- If True, you can select a layer and get GradCAM for the layer.
 	- Elif False, you can get GradCAM automatically.
-- `cuda` - Use cuda?
-- `cuda_device` - Select a specific GPU device
 
 
 ### Guide for selecting a target layer manually 
@@ -35,7 +36,7 @@ Arguments:
 If you want to select a target layer manually, you run the following code:
 
 ```shell
-python main.py --model_path=VGG19 --img_path=examples/catdog.png --select_t_layer=True
+python main.py --model_path=resnet50 --img_path=examples/catdog.png --select_t_layer=True
 ```
 
 And then, you can get system print such as the following figure (left).  
@@ -63,5 +64,5 @@ model=yourNetwork()
 
 ## Understanding GradCAM
 
-Check my blog!!
+:white_check_mark: Check my blog!!
 [GradCAM in da2so](https://da2so.github.io/2020-08-10-GradCAM/)

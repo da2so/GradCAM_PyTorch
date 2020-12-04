@@ -10,9 +10,7 @@ from utils import load_image, load_model, cuda_available, preprocess_image,save 
 
 
 class GradCAM():
-    def __init__(self,path,model_path,select_t_layer,cuda_device, class_index=None):
-        if cuda_available():
-            torch.cuda.set_device(cuda_device)
+    def __init__(self,path,model_path,select_t_layer, class_index=None):
 
         self.img_path=path
         self.model_path=model_path
@@ -47,13 +45,14 @@ class GradCAM():
             model_obj=self.model
             self.t_layer= choose_tlayer(model_obj)
 
-
+        #hooking for getting feature map
         self.t_layer.register_forward_hook(forward_hook)
+        #hooking for getting gradients
         self.t_layer.register_backward_hook(backward_hook)
         
     def __call__(self):
 
-        print('\nGradCAM start ...')
+        print('\nGradCAM start ... ')
         self.img=load_image(self.img_path)
 
         #numpy to tensor

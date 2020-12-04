@@ -29,19 +29,8 @@ def load_model(model_name):
             model=torch.load(model_name)
 
     #for pretrained model (ImageNet)
-    elif model_name=='AlexNet':
-        model = models.alexnet(pretrained=True)
-    elif model_name=='VGG19':
-        model = models.vgg19(pretrained=True)
-    elif model_name=='ResNet50':
-        model = models.resnet50(pretrained=True)
-    elif model_name=='DenseNet169':
-        model = models.densenet169(pretrained=True)
-    elif model_name=='MobileNet':
-        model  = models.mobilenet_v2(pretrained=True)
-    elif model_name=='WideResNet50':
-        model = models.wide_resnet50_2(pretrained=True)
-    
+    elif hasattr(models , model_name):
+        model = getattr(models,model_name)(pretrained=True)
     else:
         print('Choose an available pre-trained model')
         sys.exit()

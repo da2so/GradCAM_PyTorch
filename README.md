@@ -5,6 +5,8 @@
 
 :star: Star us on GitHub — it helps!!
 
+PyTorch implementation for *[Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization](https://arxiv.org/abs/1610.02391)*
+
 ![2](./assets/fig1.png)
 
 ## Install

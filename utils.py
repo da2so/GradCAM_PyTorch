@@ -1,7 +1,6 @@
 import os
 import cv2
 import sys
-
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -13,20 +12,24 @@ import torchvision
 
 
 from exceptions import NoSuchNameError , NoIndexError
+
 def load_model(model_name):
+
     #for saved model (.pt)
     if '.pt' in model_name:
         if torch.typename(torch.load(model_name)) == 'OrderedDict':
 
-            #if you want to use customized model that has a type 'OrderedDict',
-            #you shoud load model object as follows:
+            """
+            if you want to use customized model that has a type 'OrderedDict',
+            you shoud load model object as follows:
             
-            #from Net import Net()
-            #model=Net()
+            from Net import Net()
+            model=Net()
+            """
             model.load_state_dict(torch.load(model_name))
 
         else:
-            model=torch.load(model_name)
+            model = torch.load(model_name)
 
     #for pretrained model (ImageNet)
     elif hasattr(models , model_name):
@@ -95,24 +98,24 @@ def save(mask, img, img_path, model_path):
     
 def isInt_str(v):
     v = str(v).strip()
-    return v=='0' or (v if v.find('..') > -1 else v.lstrip('-+').rstrip('0').rstrip('.')).isdigit()
+    return v == '0' or (v if v.find('..') > -1 else v.lstrip('-+').rstrip('0').rstrip('.')).isdigit()
 
 def choose_tlayer(model_obj):
-    name_to_num={}
-    sel_module=False
-    name_module=None
-    module_list=['Sequential','Bottleneck','container','Block','densenet']
+    name_to_num = {}
+    sel_module = False
+    name_module = None
+    module_list = ['Sequential','Bottleneck','container','Block','densenet']
     while True:
         for num, module in enumerate(model_obj.named_children()):
             if any(x in torch.typename(module[1]) for x in module_list): 
                 print(f'[ Number: {num},  Name: {module[0]} ] -> Module: {module[1]}\n')
-                name_to_num[module[0]]=num
+                name_to_num[module[0]] = num
             else:
                 print(f'[ Number: {num},  Name: {module[0]} ] -> Layer: {module[1]}\n')
-                name_to_num[module[0]]=num
+                name_to_num[module[0]] = num
 
         print('<<      You sholud not select [classifier module], [fc layer] !!      >>')
-        if sel_module==False:
+        if sel_module == False:
             a = input('Choose "Number" or "Name" of a module containing a target layer or a target layer: ')
         else:
             a = input(f'Choose "Number" or "Name" of a module containing a target layer or a target layer in {name_module} module: ')
@@ -120,15 +123,15 @@ def choose_tlayer(model_obj):
         print('\n'*3)
         m_val = list(model_obj._modules.values())
         m_key = list(model_obj._modules.keys())
-        if isInt_str(a) ==False:
-            a= name_to_num[a]
+        if isInt_str(a) == False:
+            a = name_to_num[a]
         try:
             if any(x in torch.typename(m_val[int(a)]) for x in module_list): 
-                model_obj=m_val[int(a)]
-                name_module=m_key[int(a)]
-                sel_module=True
+                model_obj = m_val[int(a)]
+                name_module = m_key[int(a)]
+                sel_module = True
             else:
-                t_layer=m_val[int(a)]
+                t_layer = m_val[int(a)]
                 return t_layer
 
         except IndexError:

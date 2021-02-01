@@ -54,7 +54,7 @@ class GradCAM():
         # hooking for getting gradients
         self.t_layer.register_backward_hook(backward_hook)
         
-    def build(self):
+    def __call__(self):
 
         print('\nGradCAM start ... ')
 

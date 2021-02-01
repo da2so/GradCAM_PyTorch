@@ -23,4 +23,4 @@ if __name__=="__main__":
     arg = parser.parse_args()
 
     gradcam_obj = GradCAM(arg.img_path,arg.model_path,arg.select_t_layer)
-    gradcam_obj.build()
+    gradcam_obj()

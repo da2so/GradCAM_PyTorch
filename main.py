@@ -14,7 +14,7 @@ def str2bool(v):
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='PyTorch GradCAM')
 
-    parser.add_argument('--img_path', type = str, defaul = "examples/elephant.png", help = 'Image Path')
+    parser.add_argument('--img_path', type = str, default = "examples/catdog.png", help = 'Image Path')
 
     #Available model list:{'alexnet', 'vgg19', 'resnet50', 'densenet169', 'mobilenet_v2' ,'wide_resnet50_2', ...}
     parser.add_argument('--model_path', type = str, default = "resnet50", help = 'Choose a pretrained model or saved model (.pt)')
@@ -22,5 +22,7 @@ if __name__=="__main__":
 
     arg = parser.parse_args()
 
-    gradcam_obj = GradCAM(arg.img_path,arg.model_path,arg.select_t_layer)
+    gradcam_obj = GradCAM(img_path=arg.img_path,
+                        model_path=arg.model_path,
+                        select_t_layer=arg.select_t_layer)
     gradcam_obj()

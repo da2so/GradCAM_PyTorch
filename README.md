@@ -42,16 +42,11 @@ If you want to select a target layer manually, you run the following code:
 CUDA_VISIBLE_DEVICES=0 python main.py --model_path=resnet50 --img_path=examples/catdog.png --select_t_layer=True
 ```
 
-And then, you can get system print such as the following figure (left).  
-Suppose that you select(type) the features module (number 0) like as the figure (right).
+You can get system print such as the following figure (left).  
+Suppose that you select(type) 'number' or 'name' of a target layer like as the figure (middle).
+And then, you can get GradCAM result. 
 
 ![2](./assets/fig2.png)
-
-Because you select the module, you get system print one more and should select a target layer in the module as described in below figure.  
-Once typing the 'number' or 'name' of a target class, you can get GradCAM result.
-
-![2](./assets/fig3.png)
-
 
 ### How to use your customized model
 

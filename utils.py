@@ -1,47 +1,43 @@
 import os
 import cv2
-import sys
 import numpy as np
 from matplotlib import pyplot as plt
 
 from torch.nn import functional as F
 import torch
+import torch.nn as nn
 from torch.autograd import Variable
 from torchvision import models
 import torchvision
 
-
 from exceptions import NoSuchNameError , NoIndexError
 
 def load_model(model_name):
+    
+    try:
+        if '.pt' in model_name: #for saved model (.pt)
+            if torch.typename(torch.load(model_name)) == 'OrderedDict':
 
-    #for saved model (.pt)
-    if '.pt' in model_name:
-        if torch.typename(torch.load(model_name)) == 'OrderedDict':
+                """
+                if you want to use customized model that has a type 'OrderedDict',
+                you shoud load model object as follows:
+                
+                from Net import Net()
+                model=Net()
+                """
+                model.load_state_dict(torch.load(model_name))
+            else:
+                model = torch.load(model_name) 
 
-            """
-            if you want to use customized model that has a type 'OrderedDict',
-            you shoud load model object as follows:
-            
-            from Net import Net()
-            model=Net()
-            """
-            model.load_state_dict(torch.load(model_name))
+        elif hasattr(models, model_name): #for pretrained model (ImageNet)
+            model = getattr(models, model_name)(pretrained=True)
 
-        else:
-            model = torch.load(model_name)
-
-    #for pretrained model (ImageNet)
-    elif hasattr(models , model_name):
-        model = getattr(models,model_name)(pretrained=True)
-    else:
-        print('Choose an available pre-trained model')
-        sys.exit()
-
-    model.eval()
-    if cuda_available():
-        model.cuda()
-
+        model.eval()
+        if cuda_available():
+            model.cuda()
+    except:
+        raise ValueError(f'Not unvalid model was loaded: {model_name}')
+        
     return model
 
 def cuda_available():
@@ -84,7 +80,6 @@ def save(mask, img, img_path, model_path):
     gradcam = 1.0 * heatmap + img
     gradcam = gradcam / np.max(gradcam)
 
-
     index = img_path.find('/')
     index2 = img_path.find('.')
     path = 'result/' + img_path[index + 1:index2] +'/'+model_path
@@ -92,49 +87,49 @@ def save(mask, img, img_path, model_path):
         os.makedirs(path)
 
     gradcam_path = path + "/gradcam.png"
-
     cv2.imwrite(gradcam_path, np.uint8(255 * gradcam))
 
     
-def isInt_str(v):
+def is_int(v):
     v = str(v).strip()
     return v == '0' or (v if v.find('..') > -1 else v.lstrip('-+').rstrip('0').rstrip('.')).isdigit()
 
-def choose_tlayer(model_obj):
+def _exclude_layer(layer):
+
+    if isinstance(layer, nn.Sequential):
+        return True
+    if not 'torch.nn' in str(layer.__class__):
+        return True
+
+    return False
+
+def choose_tlayer(model):
     name_to_num = {}
-    sel_module = False
-    name_module = None
-    module_list = ['Sequential','Bottleneck','container','Block','densenet']
-    while True:
-        for num, module in enumerate(model_obj.named_children()):
-            if any(x in torch.typename(module[1]) for x in module_list): 
-                print(f'[ Number: {num},  Name: {module[0]} ] -> Module: {module[1]}\n')
-                name_to_num[module[0]] = num
-            else:
-                print(f'[ Number: {num},  Name: {module[0]} ] -> Layer: {module[1]}\n')
-                name_to_num[module[0]] = num
+    num_to_layer = {}
+    for idx, data in enumerate(model.named_modules()):        
+        name, layer = data
+        if _exclude_layer(layer):
+            continue
+        
+        name_to_num[name] = idx
+        num_to_layer[idx] = layer
+        print(f'[ Number: {idx},  Name: {name} ] -> Layer: {layer}\n')
+   
+    print('\n<<-------------------------------------------------------------------->>')
+    print('\n<<      You sholud not select [classifier module], [fc layer] !!      >>')
+    print('\n<<-------------------------------------------------------------------->>\n')
 
-        print('<<      You sholud not select [classifier module], [fc layer] !!      >>')
-        if sel_module == False:
-            a = input('Choose "Number" or "Name" of a module containing a target layer or a target layer: ')
-        else:
-            a = input(f'Choose "Number" or "Name" of a module containing a target layer or a target layer in {name_module} module: ')
+    a = input(f'Choose "Number" or "Name" of a target layer: ')
 
-        print('\n'*3)
-        m_val = list(model_obj._modules.values())
-        m_key = list(model_obj._modules.keys())
-        if isInt_str(a) == False:
-            a = name_to_num[a]
-        try:
-            if any(x in torch.typename(m_val[int(a)]) for x in module_list): 
-                model_obj = m_val[int(a)]
-                name_module = m_key[int(a)]
-                sel_module = True
-            else:
-                t_layer = m_val[int(a)]
-                return t_layer
-
-        except IndexError:
-            raise NoIndexError('Selected index (number) is not allowed.')
-        except KeyError:
-            raise NoSuchNameError('Selected name is not allowed.')
+    
+    if a.isnumeric() == False:
+        a = name_to_num[a]
+    else:
+        a = int(a)
+    try:
+        t_layer = num_to_layer[a]
+        return t_layer    
+    except IndexError:
+        raise NoIndexError('Selected index (number) is not allowed.')
+    except KeyError:
+        raise NoSuchNameError('Selected name is not allowed.')

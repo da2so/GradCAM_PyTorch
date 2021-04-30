@@ -6,13 +6,18 @@ import torch
 from torch.nn import functional as F
 from torch.autograd import Variable
 
-from utils import load_image, load_model, cuda_available, preprocess_image,save , choose_tlayer
+from utils import load_image, load_model, cuda_available
+from utils import preprocess_image,save , choose_tlayer
 
 
 class GradCAM():
-    def __init__(self, path, model_path, select_t_layer, class_index = None):
+    def __init__(self,
+                img_path, 
+                model_path, 
+                select_t_layer, 
+                class_index = None):
 
-        self.img_path = path
+        self.img_path = img_path
         self.model_path = model_path
         self.class_index = class_index
         self.select_t_layer = select_t_layer
@@ -45,13 +50,10 @@ class GradCAM():
             # get a last layer of the module
             self.t_layer = self.finalconv_module[-1]
         else:
-            model_obj=self.model
             # get a target layer from user's input 
-            self.t_layer = choose_tlayer(model_obj)
+            self.t_layer = choose_tlayer(self.model)
 
-        # hooking for getting feature map
         self.t_layer.register_forward_hook(forward_hook)
-        # hooking for getting gradients
         self.t_layer.register_backward_hook(backward_hook)
         
     def __call__(self):
@@ -85,7 +87,7 @@ class GradCAM():
         activations = self.activations['value']
         
         #reshaping
-        weights = torch.mean(torch.mean(gradients, dim = 2), dim=2)
+        weights = torch.mean(torch.mean(gradients, dim=2), dim=2)
         weights = weights.reshape(weights.shape[1], 1, 1)
         activationMap = torch.squeeze(activations[0])
            
